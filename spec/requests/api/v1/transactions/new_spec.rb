@@ -99,7 +99,7 @@ RSpec.describe 'POST /api/v1/transactions' do
     expect(Balance.last.payer).to eq("DANNON")
   end
 
-  xit 'returns a bad request message if the transaction tries to create a balance with a negative transaction' do
+  it 'returns a bad request message if the transaction tries to create a balance with a negative transaction' do
     fake_first_balance = Balance.create!(payer: "MILLER COORS", points: 500)
 
     expect(Balance.last.payer).to eq("MILLER COORS")
@@ -118,7 +118,7 @@ RSpec.describe 'POST /api/v1/transactions' do
     expect(response.body).to match(/Cannot take points from an empty balance/)
   end
 
-  xit 'updates the balance associated with the payer for each transaction made' do
+  it 'updates the balance associated with the payer for each transaction made' do
     fake_first_balance = Balance.create!(payer: "DANNON", points: 500)
 
     expect(Balance.by_payer("DANNON").points).to eq(500)
@@ -136,7 +136,7 @@ RSpec.describe 'POST /api/v1/transactions' do
     expect(Balance.by_payer("DANNON").points).to eq(200)
   end
 
-  xit 'denies the transaction if it brings the payer balance to the negative' do
+  it 'denies the transaction if it brings the payer balance to the negative' do
     fake_first_balance = Balance.create!(payer: "DANNON", points: 200)
 
     expect(Balance.by_payer("DANNON").points).to eq(200)
