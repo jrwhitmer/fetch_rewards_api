@@ -49,7 +49,7 @@ RSpec.describe 'POST /api/v1/transactions' do
     expect(transaction_params[:points]).to eq(transaction_created.points)
     expect(transaction_params[:timestamp]).to eq(transaction_created.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ'))
   end
-  xit 'returns the correct response body when the request is successful' do
+  it 'returns the correct response body when the request is successful' do
     transaction_params = {
       payer: "DANNON",
       points: 500,
@@ -59,6 +59,6 @@ RSpec.describe 'POST /api/v1/transactions' do
 
     post '/api/v1/transactions', headers: headers, params: JSON.generate(transaction_params)
 
-    expect(response.body).to match(/Transaction created!/)
+    expect(response.body).to match("{\"data\":{\"id\":\"#{Transaction.last.id}\",\"type\":\"transaction\",\"attributes\":{\"payer\":\"#{Transaction.last.payer}\",\"points\":#{Transaction.last.points},\"timestamp\":\"2020-11-02T14:00:00.000Z\"}}}")
   end
 end
