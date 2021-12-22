@@ -13,16 +13,16 @@ RSpec.describe 'GET /api/v1/balances' do
   it 'returns the correct body when request is successful' do
     get '/api/v1/balances'
 
-    response = JSON.parse(response.body, symbolize_names: true)
+    balances = JSON.parse(response.body, symbolize_names: true)
 
-    expect(response[:balances][0][:payer]).to eq("DANNON")
-    expect(response[:balances][1][:payer]).to eq("MILLER COORS")
-    expect(response[:balances][2][:payer]).to eq("UNILEVER")
+    expect(balances[0][:payer]).to eq("DANNON")
+    expect(balances[1][:payer]).to eq("MILLER COORS")
+    expect(balances[2][:payer]).to eq("UNILEVER")
 
-    expect(response[:balances][0][:points]).to eq(500)
-    expect(response[:balances][1][:points]).to eq(5000)
-    expect(response[:balances][2][:points]).to eq(100)
+    expect(balances[0][:points]).to eq(500)
+    expect(balances[1][:points]).to eq(5000)
+    expect(balances[2][:points]).to eq(100)
 
-    expect(response[:balances].length).to eq(3)
+    expect(balances.length).to eq(3)
   end
 end
