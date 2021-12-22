@@ -216,7 +216,7 @@
           null,
           null,
           1,
-          1,
+          2,
           null,
           null,
           null,
@@ -228,6 +228,11 @@
       "/Users/jacqwhitmer/REPOS/tech_assessments/fetch_rewards_api/config/routes.rb": {
         "lines": [
           1,
+          null,
+          1,
+          1,
+          1,
+          null,
           null,
           null
         ]
@@ -248,10 +253,126 @@
       },
       "/Users/jacqwhitmer/REPOS/tech_assessments/fetch_rewards_api/spec/models/transaction_spec.rb": {
         "lines": [
-
+          1,
+          1,
+          null,
+          null
+        ]
+      },
+      "/Users/jacqwhitmer/REPOS/tech_assessments/fetch_rewards_api/app/models/transaction.rb": {
+        "lines": [
+          1,
+          null,
+          null
+        ]
+      },
+      "/Users/jacqwhitmer/REPOS/tech_assessments/fetch_rewards_api/spec/requests/api/v1/transactions/new_spec.rb": {
+        "lines": [
+          1,
+          1,
+          1,
+          null,
+          1,
+          null,
+          null,
+          null,
+          1,
+          null,
+          1,
+          null,
+          1,
+          null,
+          1,
+          null,
+          0,
+          null,
+          null,
+          0,
+          null,
+          0,
+          null,
+          0,
+          null,
+          1,
+          null,
+          0,
+          null,
+          null,
+          0,
+          null,
+          0,
+          null,
+          0,
+          null,
+          1,
+          null,
+          0,
+          null,
+          null,
+          null,
+          0,
+          null,
+          0,
+          null,
+          0,
+          0,
+          0,
+          0,
+          null,
+          1,
+          null,
+          0,
+          null,
+          null,
+          null,
+          0,
+          null,
+          0,
+          null,
+          0,
+          null,
+          null
+        ]
+      },
+      "/Users/jacqwhitmer/REPOS/tech_assessments/fetch_rewards_api/app/controllers/api/v1/transactions_controller.rb": {
+        "lines": [
+          1,
+          1,
+          1,
+          1,
+          null,
+          null,
+          1,
+          null,
+          1,
+          1,
+          null,
+          null
+        ]
+      },
+      "/Users/jacqwhitmer/REPOS/tech_assessments/fetch_rewards_api/app/controllers/application_controller.rb": {
+        "lines": [
+          1,
+          1,
+          1,
+          null,
+          null,
+          1,
+          0,
+          null,
+          null
+        ]
+      },
+      "/Users/jacqwhitmer/REPOS/tech_assessments/fetch_rewards_api/app/serializers/transaction_serializer.rb": {
+        "lines": [
+          1,
+          1,
+          null,
+          1,
+          null
         ]
       }
     },
-    "timestamp": 1640202437
+    "timestamp": 1640205937
   }
 }
