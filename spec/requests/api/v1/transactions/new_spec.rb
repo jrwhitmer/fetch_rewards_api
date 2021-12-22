@@ -34,7 +34,7 @@ RSpec.describe 'POST /api/v1/transactions' do
 
     expect(response.body).to match(/Missing timestamp parameter in request/)
   end
-  xit 'creates a new transaction object when the request is successful' do
+  it 'creates a new transaction object when the request is successful' do
     transaction_params = {
       payer: "DANNON",
       points: 500,
@@ -45,9 +45,9 @@ RSpec.describe 'POST /api/v1/transactions' do
     post '/api/v1/transactions', headers: headers, params: JSON.generate(transaction_params)
 
     transaction_created = Transaction.last
-    expect(transaction_params.payer).to eq(transaction_created.payer)
-    expect(transaction_params.points).to eq(transaction_created.points)
-    expect(transaction_params.timestamp).to eq(transaction_created.timestamp)
+    expect(transaction_params[:payer]).to eq(transaction_created.payer)
+    expect(transaction_params[:points]).to eq(transaction_created.points)
+    expect(transaction_params[:timestamp]).to eq(transaction_created.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ'))
   end
   xit 'returns the correct response body when the request is successful' do
     transaction_params = {
