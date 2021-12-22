@@ -81,4 +81,77 @@ RSpec.describe 'POST /api/v1/transactions' do
 
     expect(response.body).to match("{\"data\":{\"id\":\"#{Transaction.last.id}\",\"type\":\"transaction\",\"attributes\":{\"payer\":\"#{Transaction.last.payer}\",\"points\":#{Transaction.last.points},\"timestamp\":\"2020-11-02T14:00:00.000Z\"}}}")
   end
+  it 'creates a new balance if there is no current balance with the payer involved in the transaction' do
+    fake_first_balance = Balance.create!(payer: "MILLER COORS", points: 500)
+
+    expect(Balance.last.payer).to eq("MILLER COORS")
+
+    transaction_params = {
+      payer: "DANNON",
+      points: 500,
+      timestamp: "2020-11-02T14:00:00Z"
+    }
+
+    headers = { 'CONTENT_TYPE' => 'application/json' }
+
+    post '/api/v1/transactions', headers: headers, params: JSON.generate(transaction_params)
+
+    expect(Balance.last.payer).to eq("DANNON")
+  end
+
+  it 'returns a bad request message if the transaction tries to create a balance with a negative transaction' do
+    fake_first_balance = Balance.create!(payer: "MILLER COORS", points: 500)
+
+    expect(Balance.last.payer).to eq("MILLER COORS")
+
+    transaction_params = {
+      payer: "DANNON",
+      points: -500,
+      timestamp: "2020-11-02T14:00:00Z"
+    }
+
+    headers = { 'CONTENT_TYPE' => 'application/json' }
+
+    post '/api/v1/transactions', headers: headers, params: JSON.generate(transaction_params)
+
+    expect(response).to have_http_status(400)
+    expect(response.body).to match(/Cannot take points from an empty balance/)
+  end
+
+  it 'updates the balance associated with the payer for each transaction made' do
+    fake_first_balance = Balance.create!(payer: "DANNON", points: 500)
+
+    expect(Balance.by_payer("DANNON").points).to eq(500)
+
+    transaction_params = {
+      payer: "DANNON",
+      points: -300,
+      timestamp: "2020-11-02T14:00:00Z"
+    }
+
+    headers = { 'CONTENT_TYPE' => 'application/json' }
+
+    post '/api/v1/transactions', headers: headers, params: JSON.generate(transaction_params)
+
+    expect(Balance.by_payer("DANNON").points).to eq(200)
+  end
+
+  it 'denies the transaction if it brings the payer balance to the negative' do
+    fake_first_balance = Balance.create!(payer: "DANNON", points: 200)
+
+    expect(Balance.by_payer("DANNON").points).to eq(200)
+
+    transaction_params = {
+      payer: "DANNON",
+      points: -300,
+      timestamp: "2020-11-02T14:00:00Z"
+    }
+
+    headers = { 'CONTENT_TYPE' => 'application/json' }
+
+    post '/api/v1/transactions', headers: headers, params: JSON.generate(transaction_params)
+
+    expect(response).to have_http_status(400)
+    expect(response.body).to match(/Not enough points with this payer to complete transaction/)
+  end
 end
