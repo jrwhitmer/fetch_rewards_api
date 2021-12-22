@@ -24,15 +24,35 @@ RSpec.describe 'POST /api/v1/transactions' do
     expect(response).to have_http_status(400)
   end
   it 'returns an appropriate error message with the bad request' do
-    transaction_params = {
+    bad_transaction_params_1 = {
       payer: "DANNON",
       points: 500
     }
     headers = { 'CONTENT_TYPE' => 'application/json' }
 
-    post '/api/v1/transactions', headers: headers, params: JSON.generate(transaction_params)
+    post '/api/v1/transactions', headers: headers, params: JSON.generate(bad_transaction_params_1)
 
     expect(response.body).to match(/Missing timestamp parameter in request/)
+
+    bad_transaction_params_2 = {
+      points: 500,
+      timestamp: "2020-11-02T14:00:00Z"
+    }
+    headers = { 'CONTENT_TYPE' => 'application/json' }
+
+    post '/api/v1/transactions', headers: headers, params: JSON.generate(bad_transaction_params_2)
+
+    expect(response.body).to match(/Missing payer parameter in request/)
+
+    bad_transaction_params_3 = {
+      payer: "DANNON",
+      timestamp: "2020-11-02T14:00:00Z"
+    }
+    headers = { 'CONTENT_TYPE' => 'application/json' }
+
+    post '/api/v1/transactions', headers: headers, params: JSON.generate(bad_transaction_params_3)
+
+    expect(response.body).to match(/Missing points parameter in request/)
   end
   it 'creates a new transaction object when the request is successful' do
     transaction_params = {
