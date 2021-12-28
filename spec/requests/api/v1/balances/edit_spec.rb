@@ -1,11 +1,11 @@
 require 'rails_helper'
 RSpec.describe 'PATCH /api/v1/balances' do
   let :create_transactions do
-    @transaction_1 = Transaction.new(payer: "DANNON", points: 1000, timestamp: "2020-11-02T14:00:00Z")
-    @transaction_2 = Transaction.new(payer: "UNILEVER", points: 200, timestamp: "2020-10-31T11:00:00Z")
-    @transaction_3 = Transaction.new(payer: "DANNON", points: -200, timestamp: "2020-10-31T15:00:00Z" )
-    @transaction_4 = Transaction.new(payer: "MILLER COORS", points: 10000, timestamp: "2020-11-01T14:00:00Z" )
-    @transaction_5 = Transaction.new(payer: "DANNON", points: 300, timestamp: "2020-10-31T10:00:00Z")
+    @transaction_1 = Transaction.create!(payer: "DANNON", points: 1000, timestamp: "2020-11-02T14:00:00Z")
+    @transaction_2 = Transaction.create!(payer: "UNILEVER", points: 200, timestamp: "2020-10-31T11:00:00Z")
+    @transaction_3 = Transaction.create!(payer: "DANNON", points: -200, timestamp: "2020-10-31T15:00:00Z" )
+    @transaction_4 = Transaction.create!(payer: "MILLER COORS", points: 10000, timestamp: "2020-11-01T14:00:00Z" )
+    @transaction_5 = Transaction.create!(payer: "DANNON", points: 300, timestamp: "2020-10-31T10:00:00Z")
   end
   it 'returns a 200 status when the request is made correctly' do
     create_transactions
@@ -18,7 +18,7 @@ RSpec.describe 'PATCH /api/v1/balances' do
     expect(response).to have_http_status(200)
   end
 
-  it 'returns a 400 status when the request is made incorrectly' do
+  xit 'returns a 400 status when the request is made incorrectly' do
     points_body = {
     }
 
@@ -27,7 +27,7 @@ RSpec.describe 'PATCH /api/v1/balances' do
     expect(response).to have_http_status(400)
   end
 
-  it 'returns an appropriate error message with a bad request' do
+  xit 'returns an appropriate error message with a bad request' do
     points_body = {
     }
 
@@ -38,7 +38,7 @@ RSpec.describe 'PATCH /api/v1/balances' do
     expect(error).to eq("Missing points")
   end
 
-  it 'returns the correct body with a good request' do
+  xit 'returns the correct body with a good request' do
     points_body = {
       points: 5000
     }
@@ -54,19 +54,19 @@ RSpec.describe 'PATCH /api/v1/balances' do
       ])
   end
 
-  it 'uses the oldest points gained first' do
+  xit 'uses the oldest points gained first' do
 
   end
 
-  it 'updates the balances with this request' do
+  xit 'updates the balances with this request' do
 
   end
 
-  it 'does not put any balance in the negative to complete this request' do
+  xit 'does not put any balance in the negative to complete this request' do
 
   end
 
-  it 'returns an appropriate error message if the users balances do not have enough points to complete the spend request' do
+  xit 'returns an appropriate error message if the users balances do not have enough points to complete the spend request' do
 
   end
 end

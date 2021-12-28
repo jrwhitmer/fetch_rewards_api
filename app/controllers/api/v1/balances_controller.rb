@@ -9,6 +9,11 @@ class Api::V1::BalancesController < ApplicationController
     end
   end
 
+  def edit
+    transactions = Transaction.oldest_to_newest
+    
+  end
+
   private
 
   def balance_params
