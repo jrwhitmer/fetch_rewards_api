@@ -6,44 +6,45 @@ RSpec.describe 'PATCH /api/v1/balances' do
     @transaction_3 = Transaction.create!(payer: "DANNON", points: -200, timestamp: "2020-10-31T15:00:00Z" )
     @transaction_4 = Transaction.create!(payer: "MILLER COORS", points: 10000, timestamp: "2020-11-01T14:00:00Z" )
     @transaction_5 = Transaction.create!(payer: "DANNON", points: 300, timestamp: "2020-10-31T10:00:00Z")
+    @balance_1 = Balance.create!(payer: "DANNON", points: 1100)
+    @balance_2 = Balance.create!(payer: "UNILEVER", points: 200)
+    @balance_3 = Balance.create!(payer: "MILLER COORS", points: 10000)
   end
   it 'returns a 200 status when the request is made correctly' do
     create_transactions
-    points_body = {
+    balance_params = {
       points: 5000
     }
 
-    patch '/api/v1/balances', headers: headers, params: JSON.generate(points_body)
+    patch '/api/v1/balances', headers: headers, params: balance_params
 
     expect(response).to have_http_status(200)
   end
 
-  xit 'returns a 400 status when the request is made incorrectly' do
+  it 'returns a 400 status when the request is made incorrectly' do
     points_body = {
     }
 
-    patch '/api/v1/balances', headers: headers, params: JSON.generate(points_body)
+    patch '/api/v1/balances', headers: headers, params: points_body
 
     expect(response).to have_http_status(400)
   end
 
-  xit 'returns an appropriate error message with a bad request' do
+  it 'returns an appropriate error message with a bad request' do
     points_body = {
     }
 
-    patch '/api/v1/balances', headers: headers, params: JSON.generate(points_body)
+    patch '/api/v1/balances', headers: headers, params: points_body
 
-    error = JSON.parse(response.body)
-
-    expect(error).to eq("Missing points")
+    expect(response.body).to match(/Missing points/)
   end
 
-  xit 'returns the correct body with a good request' do
+  it 'returns the correct body with a good request' do
     points_body = {
       points: 5000
     }
 
-    patch '/api/v1/balances', headers: headers, params: JSON.generate(points_body)
+    patch '/api/v1/balances', headers: headers, params: points_body
 
     balance_changelog = JSON.parse(response.body, symbolize_names: true)
 
