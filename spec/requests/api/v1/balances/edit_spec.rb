@@ -1,5 +1,5 @@
 require 'rails_helper'
-RSpec.describe 'PATCH /api/v1/balances' do
+RSpec.describe 'POST /api/v1/changelogs' do
   let :create_transactions do
     @transaction_1 = Transaction.create!(payer: "DANNON", points: 1000, timestamp: "2020-11-02T14:00:00Z")
     @transaction_2 = Transaction.create!(payer: "UNILEVER", points: 200, timestamp: "2020-10-31T11:00:00Z")
@@ -12,39 +12,42 @@ RSpec.describe 'PATCH /api/v1/balances' do
   end
   it 'returns a 200 status when the request is made correctly' do
     create_transactions
-    balance_params = {
-      points: 5000
+    body = {
+      "points": "5000"
     }
 
-    patch '/api/v1/balances', headers: headers, params: balance_params
+    patch '/api/v1/balances', params: body, as: :json
 
     expect(response).to have_http_status(200)
   end
 
   it 'returns a 400 status when the request is made incorrectly' do
-    points_body = {
+    create_transactions
+    body = {
     }
 
-    patch '/api/v1/balances', headers: headers, params: points_body
+    patch '/api/v1/balances', params: body, as: :json
 
     expect(response).to have_http_status(400)
   end
 
   it 'returns an appropriate error message with a bad request' do
-    points_body = {
+    create_transactions
+    body = {
     }
 
-    patch '/api/v1/balances', headers: headers, params: points_body
+    patch '/api/v1/balances', params: body, as: :json
 
     expect(response.body).to match(/Missing points/)
   end
 
   it 'returns the correct body with a good request' do
-    points_body = {
-      points: 5000
+    create_transactions
+    body = {
+      "points": "5000"
     }
 
-    patch '/api/v1/balances', headers: headers, params: points_body
+    patch '/api/v1/balances', params: body, as: :json
 
     balance_changelog = JSON.parse(response.body, symbolize_names: true)
 

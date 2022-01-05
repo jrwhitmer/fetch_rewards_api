@@ -10,6 +10,7 @@ class Api::V1::BalancesController < ApplicationController
   end
 
   def edit
+    params.permit(:points)
     if params[:points].nil?
       render_bad_request("Missing points")
     else
@@ -53,18 +54,7 @@ class Api::V1::BalancesController < ApplicationController
         change = {payer: updated_balance.payer, points: total_change}
         @return_array << change
       end
-      changelogs = []
-      @return_array.each do |element|
-        new_changelog = Changelog.new(element[:payer], element[:points])
-        changelogs << new_changelog
-      end
-      render json: changelogs, each_serializer: ChangelogSerializer, status: :ok
+      render json: @return_array, status: :ok
     end
-  end
-
-  private
-
-  def balance_params
-    params.permit(:points)
   end
 end
