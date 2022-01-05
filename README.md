@@ -2,9 +2,7 @@
 
 <br>
 
-  PewPewPew is a simple grid-based puzzle game designed to give you a few minutes cool-down between activities. Try to top our leaderboard!
-
-  This repository is for the API that stores our game data and manages our leaderboard.
+  This is my solution to your API challenge. I decided to work in Rails and use PostgreSQL for the database. I enjoyed working through this problem, and I thank you for the opportunity to showcase my skills, to stretch my brain, and get some quality practice. If you have any questions feel free to reach out to me at jacqwhitmer@gmail.com. Enjoy!
 
 ---
 
