@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :transactions, only: [:create]
       resources :balances, only: [:index]
+      patch '/balances', to: 'balances#edit'
     end
   end
 end
