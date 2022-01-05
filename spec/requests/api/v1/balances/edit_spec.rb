@@ -86,13 +86,13 @@ RSpec.describe 'POST /api/v1/changelogs' do
 
     response_body = JSON.parse(response.body, symbolize_names: true)
 
-    expect(response_body[0][:payer]).to eq("UNILEVER")
-    expect(response_body[1][:payer]).to eq("DANNON")
-    expect(response_body[2][:payer]).to eq("MILLER COORS")
+    expect(response_body[0][:payer]).to eq("DANNON")
+    expect(response_body[1][:payer]).to eq("MILLER COORS")
+    expect(response_body[2][:payer]).to eq("UNILEVER")
 
-    expect(response_body[0][:points]).to eq(0)
-    expect(response_body[1][:points]).to eq(1000)
-    expect(response_body[2][:points]).to eq(5300)
+    expect(response_body[0][:points]).to eq(1000)
+    expect(response_body[1][:points]).to eq(5300)
+    expect(response_body[2][:points]).to eq(0)
   end
 
   it 'does not put any balance in the negative to complete this request' do
@@ -119,5 +119,45 @@ RSpec.describe 'POST /api/v1/changelogs' do
 
     expect(response.status).to eq(400)
     expect(JSON.parse(response.body)).to eq({"error"=>"Missing balances and or transactions for this user"})
+  end
+
+  it 'will not go negative on any individual balance even if the current transaction is greater than the current balance (where the transaction is greater than the spending points)' do
+    create_transactions
+    @transaction_over = Transaction.create!(payer: "UNILEVER", points: 10000, timestamp: "2019-11-02T14:00:00Z")
+    @balance_2.update(points: 100)
+
+    body = {
+      "points": "5000"
+    }
+
+    patch '/api/v1/balances', params: body, as: :json
+
+    response_body = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response_body).to eq([
+      { payer: "DANNON", points: -100 },
+      { payer: "MILLER COORS", points: -4800 },
+      { payer: "UNILEVER", points: -100 }
+      ])
+  end
+
+  it 'will not go negative on any individual balance even if the current transaction is greater than the current balance (where the transaction is less than the spending points)' do
+    create_transactions
+    @transaction_over_under = Transaction.create!(payer: "UNILEVER", points: 3000, timestamp: "2019-11-02T14:00:00Z")
+    @balance_2.update(points: 100)
+
+    body = {
+      "points": "5000"
+    }
+
+    patch '/api/v1/balances', params: body, as: :json
+
+    response_body = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response_body).to eq([
+      { payer: "DANNON", points: -100 },
+      { payer: "MILLER COORS", points: -4800 },
+      { payer: "UNILEVER", points: -100 }
+      ])
   end
 end

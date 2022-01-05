@@ -1,7 +1,7 @@
 class Api::V1::BalancesController < ApplicationController
 
   def index
-    balances = Balance.all
+    balances = Balance.alphabetical
     if balances.length > 0
       render json: balances, each_serializer: BalanceSerializer, status: :ok
     else

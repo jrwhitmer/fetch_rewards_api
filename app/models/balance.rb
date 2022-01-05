@@ -8,4 +8,8 @@ class Balance < ApplicationRecord
   def self.total_points
     sum(:points)
   end
+
+  def self.alphabetical
+    order(:payer)
+  end
 end

@@ -18,5 +18,12 @@ RSpec.describe Balance, type: :model do
 
       expect(Balance.total_points).to eq(5600)
     end
+    it 'returns the balances in alphabetical order' do
+      fake_balance_1 = Balance.create!(payer: "DANNON", points: 500)
+      fake_balance_2 = Balance.create!(payer: "MILLER COORS", points: 5000)
+      fake_balance_3 = Balance.create!(payer: "UNILEVER", points: 100)
+
+      expect(Balance.alphabetical.first).to eq(fake_balance_1)
+    end
   end
 end
