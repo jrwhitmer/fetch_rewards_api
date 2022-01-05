@@ -58,19 +58,106 @@ RSpec.describe 'POST /api/v1/changelogs' do
       ])
   end
 
-  xit 'uses the oldest points gained first' do
+  it 'uses the oldest points gained first' do
+    create_transactions
+    @transaction_older = Transaction.create!(payer: "DANNON", points: 10000, timestamp: "2019-11-02T14:00:00Z")
+    @balance_1 = Balance.update(points: 11000)
+
+    body = {
+      "points": "5000"
+    }
+
+    patch '/api/v1/balances', params: body, as: :json
+
+    balance_changelog = JSON.parse(response.body, symbolize_names: true)
+
+    expect(balance_changelog).to eq([{payer: "DANNON", points: -5000}])
+  end
+
+  it 'updates the balances with this request' do
+    create_transactions
+    body = {
+      "points": "5000"
+    }
+
+    patch '/api/v1/balances', params: body, as: :json
+
+    get '/api/v1/balances'
+
+    response_body = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response_body[0][:payer]).to eq("DANNON")
+    expect(response_body[1][:payer]).to eq("MILLER COORS")
+    expect(response_body[2][:payer]).to eq("UNILEVER")
+
+    expect(response_body[0][:points]).to eq(1000)
+    expect(response_body[1][:points]).to eq(5300)
+    expect(response_body[2][:points]).to eq(0)
+  end
+
+  it 'does not put any balance in the negative to complete this request' do
+    @transaction_insufficient = Transaction.create!(payer: "DANNON", points: 1000, timestamp: "2019-11-02T14:00:00Z")
+    @balance_4 = Balance.create!(payer: "DANNON", points: 1000)
+
+    body = {
+      "points": "5000"
+    }
+
+    patch '/api/v1/balances', params: body, as: :json
+
+    expect(response.status).to eq(400)
+    expect(JSON.parse(response.body)).to eq({"error"=>"Insufficient Points"})
 
   end
 
-  xit 'updates the balances with this request' do
+  it 'returns an error message if there are no balances and/or transactions available' do
+    body = {
+      "points": "5000"
+    }
 
+    patch '/api/v1/balances', params: body, as: :json
+
+    expect(response.status).to eq(400)
+    expect(JSON.parse(response.body)).to eq({"error"=>"Missing balances and or transactions for this user"})
   end
 
-  xit 'does not put any balance in the negative to complete this request' do
+  it 'will not go negative on any individual balance even if the current transaction is greater than the current balance (where the transaction is greater than the spending points)' do
+    create_transactions
+    @transaction_over = Transaction.create!(payer: "UNILEVER", points: 10000, timestamp: "2019-11-02T14:00:00Z")
+    @balance_2.update(points: 100)
 
+    body = {
+      "points": "5000"
+    }
+
+    patch '/api/v1/balances', params: body, as: :json
+
+    response_body = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response_body).to eq([
+      { payer: "DANNON", points: -100 },
+      { payer: "MILLER COORS", points: -4800 },
+      { payer: "UNILEVER", points: -100 }
+      ])
   end
 
-  xit 'returns an appropriate error message if the users balances do not have enough points to complete the spend request' do
+  it 'will not go negative on any individual balance even if the current transaction is greater than the current balance (where the transaction is less than the spending points)' do
+    create_transactions
+    @transaction_over_under = Transaction.create!(payer: "UNILEVER", points: 3000, timestamp: "2019-11-02T14:00:00Z")
+    @balance_2.update(points: 100)
 
+    body = {
+      "points": "5000"
+    }
+
+    patch '/api/v1/balances', params: body, as: :json
+
+    response_body = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response_body).to eq([
+      { payer: "DANNON", points: -100 },
+      { payer: "MILLER COORS", points: -4800 },
+      { payer: "UNILEVER", points: -100 }
+      ])
   end
 end

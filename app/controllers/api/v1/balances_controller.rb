@@ -1,7 +1,7 @@
 class Api::V1::BalancesController < ApplicationController
 
   def index
-    balances = Balance.all
+    balances = Balance.alphabetical
     if balances.length > 0
       render json: balances, each_serializer: BalanceSerializer, status: :ok
     else
@@ -13,6 +13,10 @@ class Api::V1::BalancesController < ApplicationController
     params.permit(:points)
     if params[:points].nil?
       render_bad_request("Missing points")
+    elsif Transaction.all.length == 0 || Balance.all.length == 0
+      render_bad_request("Missing balances and or transactions for this user")
+    elsif Balance.total_points < params[:points].to_i
+      render_bad_request("Insufficient Points")
     else
       transactions = Transaction.oldest_to_newest
       @original_balances = []
@@ -52,7 +56,9 @@ class Api::V1::BalancesController < ApplicationController
         updated_balance = Balance.by_payer(original_balance[:payer])
         total_change = (updated_balance.points - original_balance[:points])
         change = {payer: updated_balance.payer, points: total_change}
-        @return_array << change
+        if change[:points].abs > 0
+          @return_array << change
+        end
       end
       render json: @return_array, status: :ok
     end

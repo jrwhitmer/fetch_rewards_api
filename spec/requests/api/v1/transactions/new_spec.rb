@@ -154,4 +154,22 @@ RSpec.describe 'POST /api/v1/transactions' do
     expect(response).to have_http_status(400)
     expect(response.body).to match(/Not enough points with this payer to complete transaction/)
   end
+
+  it 'updates a balance when a positive transaction is made while there is an existing balance' do
+    fake_first_balance = Balance.create!(payer: "DANNON", points: 200)
+
+    transaction_params = {
+      payer: "DANNON",
+      points: 300,
+      timestamp: "2020-11-02T14:00:00Z"
+    }
+
+    headers = { 'CONTENT_TYPE' => 'application/json' }
+
+    post '/api/v1/transactions', headers: headers, params: JSON.generate(transaction_params)
+
+    response_body = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response_body[:data][:attributes][:points]).to eq(300)
+  end 
 end
