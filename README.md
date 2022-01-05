@@ -93,13 +93,11 @@ Note:
 * POST to `/api/v1/transactions`
   - accepts the following body:
   ```
-  "body": {
     {
       "payer": "payer_name",
-      "points": "points",
+      "points": points,
       "timestamps": "YYYY-MM-DDTHH:MM:SSZ"
     }
-  }
   ```
   - returns the following body:
   ```
