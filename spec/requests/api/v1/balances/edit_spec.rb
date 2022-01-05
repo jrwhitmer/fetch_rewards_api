@@ -58,15 +58,55 @@ RSpec.describe 'POST /api/v1/changelogs' do
       ])
   end
 
-  xit 'uses the oldest points gained first' do
+  it 'uses the oldest points gained first' do
+    create_transactions
+    @transaction_older = Transaction.create!(payer: "DANNON", points: 10000, timestamp: "2019-11-02T14:00:00Z")
+    @balance_1 = Balance.update(points: 11000)
 
+    body = {
+      "points": "5000"
+    }
+
+    patch '/api/v1/balances', params: body, as: :json
+
+    balance_changelog = JSON.parse(response.body, symbolize_names: true)
+
+    expect(balance_changelog).to eq([{payer: "DANNON", points: -5000}])
   end
 
-  xit 'updates the balances with this request' do
+  it 'updates the balances with this request' do
+    create_transactions
+    body = {
+      "points": "5000"
+    }
 
+    patch '/api/v1/balances', params: body, as: :json
+
+    get '/api/v1/balances'
+
+    response_body = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response_body[0][:payer]).to eq("UNILEVER")
+    expect(response_body[1][:payer]).to eq("DANNON")
+    expect(response_body[2][:payer]).to eq("MILLER COORS")
+
+    expect(response_body[0][:points]).to eq(0)
+    expect(response_body[1][:points]).to eq(1000)
+    expect(response_body[2][:points]).to eq(5300)
   end
 
-  xit 'does not put any balance in the negative to complete this request' do
+  it 'does not put any balance in the negative to complete this request' do
+    @transaction_insufficient = Transaction.create!(payer: "DANNON", points: 1000, timestamp: "2019-11-02T14:00:00Z")
+    @balance_4 = Balance.create!(payer: "DANNON", points: 1000)
+
+    body = {
+      "points": "5000"
+    }
+
+    patch '/api/v1/balances', params: body, as: :json
+require 'pry'; binding.pry
+    expect(response.status).to eq(400)
+    expect(JSON.parse(response.body)).to eq("Insufficient Points")
 
   end
 

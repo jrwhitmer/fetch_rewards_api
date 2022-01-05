@@ -13,6 +13,8 @@ class Api::V1::BalancesController < ApplicationController
     params.permit(:points)
     if params[:points].nil?
       render_bad_request("Missing points")
+    elsif Balance.total_points < params[:points]
+      render_bad_request("Insufficient Points")
     else
       transactions = Transaction.oldest_to_newest
       @original_balances = []
@@ -52,7 +54,9 @@ class Api::V1::BalancesController < ApplicationController
         updated_balance = Balance.by_payer(original_balance[:payer])
         total_change = (updated_balance.points - original_balance[:points])
         change = {payer: updated_balance.payer, points: total_change}
-        @return_array << change
+        if change[:points].abs > 0
+          @return_array << change
+        end
       end
       render json: @return_array, status: :ok
     end
