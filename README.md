@@ -26,7 +26,7 @@
 
 [<img alt="Git" src="https://img.shields.io/badge/Git-flat--square?logo=git&style=for-the-badge&color=black"/>](https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup)
 
-[<img alt="PostgreSQL" src ="https://img.shields.io/badge/Postgres-flat--square?logo=postgres&style=for-the-badge&color=black"/>](https://www.postgresql.org/)
+[<img alt="PostgreSQL" src ="https://img.shields.io/badge/PostgreSQL-flat--square?logo=postgresql&style=for-the-badge&color=black"/>](https://www.postgresql.org/)
 
 [<img alt="RSpec" src ="https://img.shields.io/badge/RSpec-flat--square?logo=rspec&style=for-the-badge&color=black"/>](https://github.com/rspec/rspec-rails)
 
