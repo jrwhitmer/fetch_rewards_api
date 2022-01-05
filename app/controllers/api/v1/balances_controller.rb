@@ -13,7 +13,7 @@ class Api::V1::BalancesController < ApplicationController
     params.permit(:points)
     if params[:points].nil?
       render_bad_request("Missing points")
-    elsif Balance.total_points < params[:points]
+    elsif Balance.total_points < params[:points].to_i
       render_bad_request("Insufficient Points")
     else
       transactions = Transaction.oldest_to_newest

@@ -104,9 +104,9 @@ RSpec.describe 'POST /api/v1/changelogs' do
     }
 
     patch '/api/v1/balances', params: body, as: :json
-require 'pry'; binding.pry
+
     expect(response.status).to eq(400)
-    expect(JSON.parse(response.body)).to eq("Insufficient Points")
+    expect(JSON.parse(response.body)).to eq({"error"=>"Insufficient Points"})
 
   end
 
