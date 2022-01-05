@@ -2,7 +2,11 @@
 
 <br>
 
-  This is my solution to your API challenge. I decided to work in Rails and use PostgreSQL for the database. I enjoyed working through this problem, and I thank you for the opportunity to showcase my skills, to stretch my brain, and get some quality practice. If you have any questions feel free to reach out to me at jacqwhitmer@gmail.com. Enjoy!
+  This is my solution to your API challenge. I decided to work in Rails and use PostgreSQL for the database. I enjoyed working through this problem, and I thank you for the opportunity to showcase my skills, to stretch my brain, and get some quality practice.
+
+  One note: I would not normally leave so much logic within my controllers, it is not very great MVC. Unfortunately due to personal time constraints I just didn't get to refactor that and abstract some code out. I understand it might be rough on the eyeballs and tough to swallow for any serious rubyists, but if I have time later this week, I would enjoy fixing that flaw.
+
+  If you have any questions feel free to reach out to me at jacqwhitmer@gmail.com. Enjoy!
 
 ---
 
