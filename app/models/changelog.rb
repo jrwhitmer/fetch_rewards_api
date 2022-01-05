@@ -1,3 +1,0 @@
-class Changelog < ApplicationRecord
-
-end 
