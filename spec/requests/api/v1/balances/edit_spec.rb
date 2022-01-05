@@ -110,7 +110,14 @@ RSpec.describe 'POST /api/v1/changelogs' do
 
   end
 
-  xit 'returns an appropriate error message if the users balances do not have enough points to complete the spend request' do
+  it 'returns an error message if there are no balances and/or transactions available' do
+    body = {
+      "points": "5000"
+    }
 
+    patch '/api/v1/balances', params: body, as: :json
+
+    expect(response.status).to eq(400)
+    expect(JSON.parse(response.body)).to eq({"error"=>"Missing balances and or transactions for this user"})
   end
 end

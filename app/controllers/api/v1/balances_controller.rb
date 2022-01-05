@@ -13,6 +13,8 @@ class Api::V1::BalancesController < ApplicationController
     params.permit(:points)
     if params[:points].nil?
       render_bad_request("Missing points")
+    elsif Transaction.all.length == 0 || Balance.all.length == 0
+      render_bad_request("Missing balances and or transactions for this user")
     elsif Balance.total_points < params[:points].to_i
       render_bad_request("Insufficient Points")
     else
